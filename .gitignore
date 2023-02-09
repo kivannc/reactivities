@@ -4,7 +4,6 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 appsettings.json
-
 # User-specific files
 *.rsuser
 *.suo
@@ -477,3 +476,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+API/reactivities.db
+API/reactivities.db-wal
+API/reactivities.db
