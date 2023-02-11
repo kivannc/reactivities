@@ -1,18 +1,15 @@
 import { observer } from "mobx-react-lite";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Button, Form, Segment } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
+import { useParams, Link } from "react-router-dom";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 
 export default observer(function ActivityForm() {
   const { activityStore } = useStore();
-  const {
-    selectedActivity,
-    closeForm,
-    createActivity,
-    updateActivity,
-    loading,
-  } = activityStore;
-  const initialState = selectedActivity ?? {
+  const { id } = useParams<{ id: string }>();
+
+  const [activity, setActivity] = useState({
     id: "",
     title: "",
     category: "",
@@ -20,9 +17,19 @@ export default observer(function ActivityForm() {
     date: "",
     city: "",
     venue: "",
-  };
+  });
 
-  const [activity, setActivity] = useState(initialState);
+  const {
+    loadActivity,
+    loadingInitial,
+    createActivity,
+    updateActivity,
+    loading,
+  } = activityStore;
+
+  useEffect(() => {
+    if (id) loadActivity(id).then((activity) => setActivity(activity!));
+  }, [id, loadActivity]);
 
   function handleSubmit() {
     activity?.id ? updateActivity(activity) : createActivity(activity);
@@ -34,6 +41,8 @@ export default observer(function ActivityForm() {
     const { name, value } = event.target;
     setActivity({ ...activity, [name]: value });
   }
+
+  if (loadingInitial) return <LoadingComponent />;
 
   return (
     <Segment clearing>
@@ -84,7 +93,8 @@ export default observer(function ActivityForm() {
           content="Submit"
         />
         <Button
-          onClick={closeForm}
+          as={Link}
+          to={`/activities/${activity.id}`}
           floated="right"
           type="submit"
           content="Cancel"
