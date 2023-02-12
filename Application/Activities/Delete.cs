@@ -26,6 +26,7 @@ public class Delete
             {
                 return null;
             }
+            
             _context.Remove(activity);
 
             var result = await _context.SaveChangesAsync() > 0;
