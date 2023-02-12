@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { Activity } from "../models/activity";
 import { router } from "../router/Routers";
+import { store } from "../stores/store";
 
 const sleep = (delay: number) => {
   return new Promise((resolve) => {
@@ -39,7 +40,8 @@ axios.interceptors.response.use(
         router.navigate("/notfound");
         break;
       case 500:
-        toast.error("Server error");
+        store.commonStore.setServerError(data);
+        router.navigate("/server-error");
         break;
     }
     return Promise.reject(error);
