@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { Activity } from "../models/activity";
+import { router } from "../router/Routers";
 
 const sleep = (delay: number) => {
   return new Promise((resolve) => {
@@ -25,8 +26,7 @@ axios.interceptors.response.use(
         toast.error("Unauthorized");
         break;
       case 404:
-        //navigate("/notfound");
-        toast.error("Not found");
+        router.navigate("/notfound");
         break;
       case 500:
         toast.error("Server error");
