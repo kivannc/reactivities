@@ -21,6 +21,9 @@ axios.interceptors.response.use(
     const { data, status, config } = error.response as AxiosResponse;
     switch (status) {
       case 400:
+        if (config.method === "get" && data?.errors?.hasOwnProperty("id")) {
+          router.navigate("/not-found");
+        }
         if (data.errors) {
           const modelStateErrors = [];
           for (const key in data.errors) {
@@ -37,7 +40,7 @@ axios.interceptors.response.use(
         toast.error("Unauthorized");
         break;
       case 404:
-        router.navigate("/notfound");
+        router.navigate("/not-found");
         break;
       case 500:
         store.commonStore.setServerError(data);
