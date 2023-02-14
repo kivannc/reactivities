@@ -38,13 +38,7 @@ export default observer(function ActivityForm() {
     city: Yup.string().required(),
   });
 
-  const {
-    loadActivity,
-    loadingInitial,
-    createActivity,
-    updateActivity,
-    loading,
-  } = activityStore;
+  const { loadActivity, loadingInitial, createActivity, updateActivity, loading } = activityStore;
 
   useEffect(() => {
     if (id) loadActivity(id).then((activity) => setActivity(activity!));
@@ -53,13 +47,9 @@ export default observer(function ActivityForm() {
   function handleFormSubmit(activity: Activity) {
     if (!activity.id) {
       activity.id = uuid();
-      createActivity(activity).then(() =>
-        navigate(`/activities/${activity.id}`)
-      );
+      createActivity(activity).then(() => navigate(`/activities/${activity.id}`));
     } else {
-      updateActivity(activity).then(() =>
-        navigate(`/activities/${activity.id}`)
-      );
+      updateActivity(activity).then(() => navigate(`/activities/${activity.id}`));
     }
   }
 
@@ -78,11 +68,7 @@ export default observer(function ActivityForm() {
           <Form className="ui form" onSubmit={handleSubmit} autoComplete="off">
             <MyTextInput name="title" placeholder="Title" />
             <MyTextArea rows={3} placeholder="Description" name="description" />
-            <MySelectInput
-              options={categoryOptions}
-              placeholder="Category"
-              name="category"
-            />
+            <MySelectInput options={categoryOptions} placeholder="Category" name="category" />
             <MyDateInput
               placeholderText="Date"
               name="date"
@@ -101,13 +87,7 @@ export default observer(function ActivityForm() {
               type="submit"
               content="Submit"
             />
-            <Button
-              as={Link}
-              to={`/activities/${activity.id}`}
-              floated="right"
-              type="submit"
-              content="Cancel"
-            />
+            <Button as={Link} to={`/activities/${activity.id}`} floated="right" type="submit" content="Cancel" />
           </Form>
         )}
       </Formik>
