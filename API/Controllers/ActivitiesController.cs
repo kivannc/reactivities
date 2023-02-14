@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[AllowAnonymous]
 public class ActivitiesController : BaseApiController
 {
     public ActivitiesController(IMediator mediator) : base(mediator) { }
