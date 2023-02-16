@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "Launch Chrome",
             "request": "launch",
@@ -36,7 +37,8 @@
         {
             "name": ".NET Core Attach",
             "type": "coreclr",
-            "request": "attach"
+            "request": "attach",
+            "processName": "API"
         }
     ]
 }
