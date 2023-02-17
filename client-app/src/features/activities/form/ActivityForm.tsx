@@ -12,7 +12,7 @@ import MyTextArea from "../../../common/form/MyTextArea";
 import MySelectInput from "../../../common/form/MySelectInput";
 import { categoryOptions } from "../../../common/options/categoryOptions";
 import MyDateInput from "../../../common/form/MyDateInput";
-import { Activity, ActivityFormValues } from "../../../app/models/activity";
+import { ActivityFormValues } from "../../../app/models/activity";
 
 export default observer(function ActivityForm() {
   const { activityStore } = useStore();
@@ -30,7 +30,7 @@ export default observer(function ActivityForm() {
     city: Yup.string().required(),
   });
 
-  const { loadActivity, loadingInitial, createActivity, updateActivity, loading } = activityStore;
+  const { loadActivity, loadingInitial, createActivity, updateActivity } = activityStore;
 
   useEffect(() => {
     if (id) loadActivity(id).then((activity) => setActivity(new ActivityFormValues(activity)));
