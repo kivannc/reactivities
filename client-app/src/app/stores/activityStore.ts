@@ -3,6 +3,7 @@ import agent from "../api/agent";
 import { Activity } from "../models/activity";
 import { v4 as uuid } from "uuid";
 import { format } from "date-fns";
+import { store } from "./store";
 
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
@@ -25,9 +26,7 @@ export default class ActivityStore {
     return Object.entries(
       this.activitiesByDate.reduce((activities, activity) => {
         const date = format(activity.date!, "dd MMM yyyy");
-        activities[date] = activities[date]
-          ? [...activities[date], activity]
-          : [activity];
+        activities[date] = activities[date] ? [...activities[date], activity] : [activity];
         return activities;
       }, {} as { [key: string]: Activity[] })
     );
@@ -38,10 +37,7 @@ export default class ActivityStore {
     try {
       const activities = await agent.Activities.list();
       activities.forEach((activity) => {
-        activity.date = new Date(activity.date!);
-        runInAction(() => {
-          this.activityRegistry.set(activity.id, activity);
-        });
+        this.setActivity(activity);
       });
       this.setLoadingInitial(false);
     } catch (error) {
@@ -78,6 +74,13 @@ export default class ActivityStore {
   };
 
   private setActivity = (activity: Activity) => {
+      const user = store.userStore.user;
+
+    if (user) {
+      activity.isGoing = activity.attendees!.some((at) => at.username === user.username);
+      activity.isHost = activity.hostUsername === user.username;
+      activity.host = activity.attendees!.find((at) => at.username === activity.hostUsername);
+    }
     activity.date = new Date(activity.date!);
     this.activityRegistry.set(activity.id, activity);
   };
