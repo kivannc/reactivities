@@ -54,7 +54,7 @@ public class UpdateAttendance
                 {
                     AppUser = user,
                     Activity = activity,
-                    IsHost = false
+                    IsHost =  false
                 };
 
                 activity.Attendees.Add(attendance);
