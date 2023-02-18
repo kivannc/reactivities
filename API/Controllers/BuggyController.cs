@@ -6,10 +6,6 @@ namespace API.Controllers
 {
     public class BuggyController : BaseApiController
     {
-        public BuggyController(IMediator mediator) : base(mediator)
-        {
-        }
-
         [HttpGet("not-found")]
         public ActionResult GetNotFound()
         {

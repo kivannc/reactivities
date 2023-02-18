@@ -10,11 +10,6 @@ public class BaseApiController : ControllerBase
 {
     private IMediator _mediator;
     protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
-    public BaseApiController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     protected ActionResult HandleResult<T>(Result<T> result)
     {
         if (result == null) return NotFound();
