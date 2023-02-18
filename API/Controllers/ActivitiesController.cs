@@ -8,8 +8,6 @@ namespace API.Controllers;
 
 public class ActivitiesController : BaseApiController
 {
-    public ActivitiesController(IMediator mediator) : base(mediator) { }
-
     [HttpGet]
     public async Task<IActionResult> GetActivities()
     {

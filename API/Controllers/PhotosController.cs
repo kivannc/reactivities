@@ -6,8 +6,6 @@ namespace API.Controllers;
 
 public class PhotosController : BaseApiController
 {
-    public PhotosController(IMediator mediator) : base(mediator) { }
-
     [HttpPost]
     public async Task<IActionResult> Add([FromForm] Add.Command command)
     {
