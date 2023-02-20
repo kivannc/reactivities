@@ -1,7 +1,7 @@
 export interface User {
   username: string;
   token: string;
-  imageUrl: string;
+  image: string;
   displayName: string;
 }
 

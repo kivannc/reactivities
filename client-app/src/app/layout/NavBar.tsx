@@ -13,7 +13,7 @@ export default observer(function NavBar() {
     <Menu inverted fixed="top">
       <Container>
         <Menu.Item as={NavLink} to="/" style={{ fontSize: "1.1em" }}>
-          <img src="/assets/logo.png" alt="logo" style={{ marginRight: "10px" }} />
+          <Image size="mini" src="/assets/logo.png" alt="logo" style={{ marginRight: "10px" }} />
           Reactivities
         </Menu.Item>
         <Menu.Item as={NavLink} to="/activities" name="Activities" />
@@ -22,7 +22,7 @@ export default observer(function NavBar() {
           <Button as={NavLink} to="/createActivity" positive content="Create Activity" />
         </Menu.Item>
         <Menu.Item position="right">
-          <Image avatar spaced="right" src={user?.imageUrl || "/assets/user.png"} />
+          <Image avatar spaced="right" src={user?.image || "/assets/user.png"} />
           <Dropdown pointing="top left" text={user?.displayName}>
             <Dropdown.Menu>
               <Dropdown.Item
