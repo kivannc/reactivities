@@ -4,6 +4,7 @@ import { Activity, ActivityFormValues } from "../models/activity";
 import { format } from "date-fns";
 import { store } from "./store";
 import { Profile } from "../models/profile";
+import { toast } from "react-toastify";
 
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
@@ -48,18 +49,25 @@ export default class ActivityStore {
   };
 
   loadActivity = async (id: string) => {
+    // First, check if the activity is already loaded
     let activity = this.getActivity(id);
     if (activity) {
+      // If it is, set that activity as the selected activity
       this.selectedActivity = activity;
       return activity;
     } else {
+      // Otherwise, we need to load the activity
       this.loadingInitial = true;
       try {
+        // Get the activity from the API
         activity = await agent.Activities.details(id);
+        // Set the activity in the store
         this.setActivity(activity);
+        // Set the selected activity in the store
         runInAction(() => {
           this.selectedActivity = activity;
         });
+        // Finish loading
         this.setLoadingInitial(false);
         return activity;
       } catch (error) {
@@ -158,6 +166,7 @@ export default class ActivityStore {
         this.activityRegistry.set(this.selectedActivity!.id, this.selectedActivity!);
       });
     } catch (error) {
+      toast.error("Problem updating attendance");
     } finally {
       runInAction(() => (this.loading = false));
     }
