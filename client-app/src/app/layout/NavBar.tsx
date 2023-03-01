@@ -27,7 +27,7 @@ export default observer(function NavBar() {
             <Dropdown.Menu>
               <Dropdown.Item
                 as={NavLink}
-                to={`/profile/${user?.username}`}
+                to={`/profiles/${user?.username}`}
                 text="My profile"
                 icon="user"
               />

@@ -1,10 +1,10 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { toast } from "react-toastify";
-import { Activity, ActivityFormValues } from "../models/activity";
-import { Profile } from "../models/profile";
-import { User, UserFormValues } from "../models/user";
-import { router } from "../router/Routers";
-import { store } from "../stores/store";
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { toast } from 'react-toastify';
+import { Activity, ActivityFormValues } from '../models/activity';
+import { Photo, Profile } from '../models/profile';
+import { User, UserFormValues } from '../models/user';
+import { router } from '../router/Routers';
+import { store } from '../stores/store';
 
 const sleep = (delay: number) => {
   return new Promise((resolve) => {
@@ -12,11 +12,12 @@ const sleep = (delay: number) => {
   });
 };
 
-axios.defaults.baseURL = "http://localhost:5000/api";
+axios.defaults.baseURL = 'http://localhost:5000/api';
 
 axios.interceptors.request.use((config) => {
   const token = store.commonStore.token;
-  if (token && config?.headers) config.headers.Authorization = `Bearer ${token}`;
+  if (token && config?.headers)
+    config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
@@ -29,8 +30,8 @@ axios.interceptors.response.use(
     const { data, status, config } = error.response as AxiosResponse;
     switch (status) {
       case 400:
-        if (config.method === "get" && data?.errors?.hasOwnProperty("id")) {
-          router.navigate("/not-found");
+        if (config.method === 'get' && data?.errors?.hasOwnProperty('id')) {
+          router.navigate('/not-found');
         }
         if (data.errors) {
           const modelStateErrors = [];
@@ -45,14 +46,14 @@ axios.interceptors.response.use(
         }
         break;
       case 401:
-        toast.error("Unauthorized");
+        toast.error('Unauthorized');
         break;
       case 404:
-        router.navigate("/not-found");
+        router.navigate('/not-found');
         break;
       case 500:
         store.commonStore.setServerError(data);
-        router.navigate("/server-error");
+        router.navigate('/server-error');
         break;
     }
     return Promise.reject(error);
@@ -63,15 +64,17 @@ const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
 const requests = {
   get: <T>(url: string) => axios.get<T>(url).then(responseBody),
-  post: <T>(url: string, body: {}) => axios.post<T>(url, body).then(responseBody),
+  post: <T>(url: string, body: {}) =>
+    axios.post<T>(url, body).then(responseBody),
   put: <T>(url: string, body: {}) => axios.put<T>(url, body).then(responseBody),
   del: <T>(url: string) => axios.delete<T>(url).then(responseBody),
 };
 
 const Activities = {
-  list: () => requests.get<Activity[]>("/activities"),
+  list: () => requests.get<Activity[]>('/activities'),
   details: (id: string) => requests.get<Activity>(`/activities/${id}`),
-  create: (activity: ActivityFormValues) => requests.post<void>("/activities", activity),
+  create: (activity: ActivityFormValues) =>
+    requests.post<void>('/activities', activity),
   update: (activity: ActivityFormValues) =>
     requests.put<void>(`/activities/${activity.id}`, activity),
   delete: (id: string) => requests.del<void>(`/activities/${id}`),
@@ -79,13 +82,37 @@ const Activities = {
 };
 
 const Account = {
-  current: () => requests.get<User>("/account"),
-  login: (user: UserFormValues) => requests.post<User>("/account/login", user),
-  register: (user: UserFormValues) => requests.post<User>("/account/register", user),
+  current: () => requests.get<User>('/account'),
+  login: (user: UserFormValues) => requests.post<User>('/account/login', user),
+  register: (user: UserFormValues) =>
+    requests.post<User>('/account/register', user),
 };
 
 const Profiles = {
   get: (username: string) => requests.get<Profile>(`/profiles/${username}`),
+  uploadPhoto: (file: Blob) => {
+    let formData = new FormData();
+    formData.append('File', file);
+    return axios.post<Photo>('/photos', formData, {
+      headers: { 'Content-type': 'multipart/form-data' },
+    });
+  },
+  setMainPhoto: (id: string) => requests.post(`/photos/${id}/setMain`, {}),
+  deletePhoto: (id: string) => requests.del(`/photos/${id}`),
+  updateProfile: (profile: Partial<Profile>) =>
+    requests.put(`/profiles`, profile),
+  updateFollowing: (username: string) =>
+    requests.post(`/follow/${username}`, {}),
+  listFollowings: (username: string, predicate: string) =>
+    requests.get<Profile[]>(`/follow/${username}?predicate=${predicate}`),
+  listActivities: (username: string, predicate: string) =>
+    requests.get<Activity[]>(
+      `/profiles/${username}/activities?predicate=${predicate}`
+    ),
+  isFollowing: (username: string) =>
+    requests.get<boolean>(`/follow/${username}`),
+  unfollow: (username: string) => requests.del(`/follow/${username}`),
+  follow: (username: string) => requests.post(`/follow/${username}`, {}),
 };
 
 const agent = {

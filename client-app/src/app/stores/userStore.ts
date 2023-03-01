@@ -1,8 +1,8 @@
-import { makeAutoObservable } from "mobx";
-import agent from "../api/agent";
-import { User, UserFormValues } from "../models/user";
-import { router } from "../router/Routers";
-import { store } from "./store";
+import { makeAutoObservable } from 'mobx';
+import agent from '../api/agent';
+import { User, UserFormValues } from '../models/user';
+import { router } from '../router/Routers';
+import { store } from './store';
 
 export default class UserStore {
   user: User | null = null;
@@ -28,7 +28,7 @@ export default class UserStore {
       const user = await agent.Account.login(creds);
       store.commonStore.setToken(user.token);
       this.setUser(user);
-      router.navigate("/activities");
+      router.navigate('/activities');
       store.modalStore.closeModal();
     } catch (error) {
       throw error;
@@ -40,7 +40,7 @@ export default class UserStore {
       const user = await agent.Account.register(creds);
       store.commonStore.setToken(user.token);
       this.setUser(user);
-      router.navigate("/activities");
+      router.navigate('/activities');
       store.modalStore.closeModal();
     } catch (error) {
       throw error;
@@ -50,7 +50,7 @@ export default class UserStore {
   logout = () => {
     store.commonStore.setToken(null);
     this.setUser(null);
-    router.navigate("/");
+    router.navigate('/');
   };
 
   getUser = async () => {
@@ -60,6 +60,10 @@ export default class UserStore {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  setImage = (image: string) => {
+    if (this.user) this.user.image = image;
   };
 
   // get isCurrentUser() {

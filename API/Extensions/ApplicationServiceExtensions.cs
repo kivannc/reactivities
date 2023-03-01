@@ -32,6 +32,7 @@ namespace API.Extensions
             });
 
             services.AddMediatR(typeof(List.Handler));
+            services.AddMediatR(typeof(Add.Handler));
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssemblyContaining<Create>();
